@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "dev": "cd source && cargo build && ./target/debug/stanco-agent --help",
+    "build": "cd source && cargo build --release",
+    "run": "cd source && cargo run --release",
+    "test": "cd source && cargo test --release",
+    "clean": "cd source && cargo clean",
+    "install": "cd source && cargo install --path ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "stanco-agent"
+  },
+  "keywords": [
+    "agent"
+  ],
+  "author": "stanco",
+  "license": "ISC",
+  "description": ""
+}
