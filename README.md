@@ -1,2 +1,2 @@
 # stanco-agent
-cyber monitoring agent for STANDARDS &amp; COMPANIES
+Cyber Monitoring Agent for STANDARDS &amp; COMPANIES
