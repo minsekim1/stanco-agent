@@ -1,13 +1,7 @@
-use std::fs::File;
-use std::io::copy;
-use std::process::Command;
-use flate2::read::GzDecoder;
-use tar::Archive;
-use reqwest::blocking::get;
 
 pub fn install_via_direct_download() -> bool {
 	println!("[ERROR] 현재는 직접 다운로드 방식 설치는 지원하지 않습니다.");
-	false
+	false;
 
     // println!("\n[INFO 5/12] APT 없이 Zabbix Agent 설치 (Rust 압축 해제 방식)");
 

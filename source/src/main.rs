@@ -1,11 +1,6 @@
 use clap::Parser;
-use std::process::{Command, exit};
-use std::fs::File;
+use std::process::{exit};
 use uuid::Uuid;
-use flate2::read::GzDecoder;
-use tar::Archive;
-use reqwest::blocking::get;
-use std::io::copy;
 
 mod function;
 use function::check_network::check_network;

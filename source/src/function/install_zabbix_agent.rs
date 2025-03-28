@@ -1,9 +1,7 @@
 use std::process::Command;
 
-mod function;
-use function::detect_os::detect_os;
-use function::has_command::has_command;
-use function::install_via_direct_download::install_via_direct_download;
+use super::has_command::has_command;
+use super::install_via_direct_download::install_via_direct_download;
 
 fn install_via_yum() -> bool {
     println!("[INFO] YUM 기반 설치 진행 중...");
@@ -58,6 +56,18 @@ fn install_via_apt() -> bool {
 
     println!("\n[INFO 7/12] Zabbix Agent 설치 완료.");
     true
+}
+
+fn detect_os() -> String {
+    if cfg!(target_os = "windows") {
+        "windows".to_string()
+    } else if cfg!(target_os = "macos") {
+        "macos".to_string()
+    } else if cfg!(target_os = "linux") {
+        "linux".to_string()
+    } else {
+        "unsupported".to_string()
+    }
 }
 
 pub fn install_zabbix_agent() -> bool {
