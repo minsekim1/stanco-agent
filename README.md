@@ -7,7 +7,7 @@ Cyber Monitoring Agent for STANDARDS &amp; COMPANIES
 
 ### Linux
 ```bash
-brew install stanco-agent
+sudo brew install stanco-agent
 ```
 
 ### Windows

@@ -3,7 +3,7 @@
     "dev": "cd source && cargo build && ./target/debug/stanco-agent --help",
     "build": "cd source && cargo build --release",
     "run": "cd source && cargo run --release",
-    "test": "cd source && cargo test --release",
+    "test": "cd source && cargo run -- install --company com1 --product router9000 --sbomkey sbom-1234 --use-location true",
     "clean": "cd source && cargo clean",
     "install": "cd source && cargo install --path ."
   },
