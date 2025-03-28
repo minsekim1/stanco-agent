@@ -58,6 +58,22 @@ fn install_via_apt() -> bool {
     true
 }
 
+fn install_via_brew() -> bool {
+    println!("[INFO] Homebrew 기반 Zabbix Agent 설치 중...");
+    let status = Command::new("brew")
+        .args(["install", "zabbix-cli"])
+        .status()
+        .expect("brew 실행 실패");
+
+    if status.success() {
+        println!("[INFO] Zabbix Agent 설치 완료 (brew)");
+        true
+    } else {
+        eprintln!("[ERROR] Zabbix Agent 설치 실패 (brew). Homebrew 상태를 확인하세요.");
+        false
+    }
+}
+
 fn detect_os() -> String {
     if cfg!(target_os = "windows") {
         "windows".to_string()
@@ -71,10 +87,12 @@ fn detect_os() -> String {
 }
 
 pub fn install_zabbix_agent() -> bool {
-    match detect_os().as_str() {
+    let os_type = detect_os();
+
+    match os_type.as_str() {
         "windows" => {
             println!("[ERROR] 현재는 Windows 설치는 지원하지 않습니다.");
-            false
+            return false;
         }
         "linux" => {
             if has_command("apt") {
@@ -84,12 +102,21 @@ pub fn install_zabbix_agent() -> bool {
             } else if has_command("zypper") {
                 install_via_zypper()
             } else {
-                install_via_direct_download()
+                println!("[ERROR] 지원되지 않는 패키지 관리자입니다. apt, yum, zypper 중 하나를 설치해주세요.");
+                return false;
+            }
+        }
+        "macos" => {
+            if has_command("brew") {
+                install_via_brew()
+            } else {
+                println!("[ERROR] Homebrew가 설치되어 있지 않습니다.");
+                return false;
             }
         }
         _ => {
-            println!("[ERROR] 지원하지 않는 운영체제입니다.");
-            false
+            println!("[ERROR] 지원하지 않는 운영체제입니다: {}", os_type);
+            return false;
         }
     }
 }

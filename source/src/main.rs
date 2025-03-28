@@ -60,13 +60,12 @@ fn main() {
             println!("[INFO 3/12] UUID 생성 완료: {}", uuid);
 
             // 4단계: Host 정보 구성
+            println!("\n[INFO 4/12] 설정 값");
             let hostname = format!("{}_{}_{}", company, product, uuid);
             let host_metadata = format!(
                 "mode=production,company={},product={},sbom_key={}",
                 company, product, sbomkey
             );
-
-            println!("\n[INFO 4/12] 설정 값");
             println!("    >> 회사명: {}", company);
             println!("    >> 제품명: {}", product);
             println!("    >> SBOM Key: {}", sbomkey);
@@ -74,13 +73,19 @@ fn main() {
             println!("    >> HostMetadata: {}", host_metadata);
             println!("    >> Use Location: {}", use_location);
 
-            // 5~7단계: 시스템 업데이트 및 Zabbix 설치 
-            // 명령어 확인
+            // 5단계: 시스템 업데이트 체크
             println!("\n[INFO 5/12] 시스템 업데이트 중...");
+            println!("\n[INFO 5/12] 시스템 업데이트 완료.");
+            
+
+            // 6단계: Zabbix 설치 
+            println!("\n[INFO 6/12] Zabbix 저장소 추가 및 패키지 설치");
             if !install_zabbix_agent() {
                 eprintln!("\n[ERROR-5] Zabbix Agent 설치 실패. 네트워크 또는 권한 문제가 있을 수 있습니다.");
                 exit(1);
             } 
+            println!("[INFO 6/12] Zabbix 설치 완료.");
+            
         }
     }
 }
