@@ -66,8 +66,6 @@ pub fn install_zabbix_agent() -> bool {
             println!("[ERROR] 현재는 Windows 설치는 지원하지 않습니다.");
             false
         }
-        "debian" => install_via_apt(),
-        "rhel" => install_via_yum(),
         "linux" => {
             if has_command("apt") {
                 install_via_apt()
