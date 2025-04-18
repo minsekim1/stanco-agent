@@ -1,10 +1,14 @@
 use clap::Parser;
 use std::process::{exit};
 use uuid::Uuid;
+use std::path::Path;
+use std::fs;
 
 mod function;
 use function::check_network::check_network;
 use function::install_zabbix_agent::install_zabbix_agent;
+use function::get_zabbix_config_path::get_zabbix_config_path;
+
 
 /// Stanco Agent Installer
 #[derive(Parser)]
@@ -86,6 +90,26 @@ fn main() {
             } 
             println!("[INFO 6/12] Zabbix 설치 완료.");
             
+             // 7단계: 설정 파일 백업 및 편집 준비
+            println!("\n[INFO 7/12] Zabbix 설정 파일 준비 중...");
+            let config_file = match function::get_zabbix_config_path::get_zabbix_config_path() {
+                Some(path) => path,
+                None => {
+                    eprintln!("[ERROR] Zabbix 설정 파일 경로를 찾을 수 없습니다.");
+                    exit(1);
+                }
+            };
+
+            let backup_file = format!("{}.bak", config_file);
+            if Path::new(&config_file).exists() {
+                match fs::copy(&config_file, &backup_file) {
+                    Ok(_) => println!("[INFO 7/12] 기존 설정 백업 완료: {}", backup_file),
+                    Err(e) => eprintln!("[WARN] 설정 백업 실패: {}. 설치는 계속 진행됩니다.", e),
+                }
+            } else {
+                println!("[WARN] 기존 설정 파일 없음. 백업 생략.");
+            }
+            println!("[INFO 7/12] Zabbix 설정 파일 준비 완료. {}",config_file);
         }
     }
 }

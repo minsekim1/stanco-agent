@@ -60,19 +60,62 @@ fn install_via_apt() -> bool {
 
 fn install_via_brew() -> bool {
     println!("[INFO] Homebrew 기반 Zabbix Agent 설치 중...");
-    let status = Command::new("brew")
-        .args(["install", "zabbix-cli"])
+   
+    
+    // 필수 툴 설치
+    let install_status = Command::new("brew")
+        .args(["install", "automake", "pkg-config", "pcre2", "openssl"])
         .status()
-        .expect("brew 실행 실패");
+        .expect("brew install 실행 실패");
 
-    if status.success() {
-        println!("[INFO] Zabbix Agent 설치 완료 (brew)");
-        true
-    } else {
-        eprintln!("[ERROR] Zabbix Agent 설치 실패 (brew). Homebrew 상태를 확인하세요.");
-        false
+    if !install_status.success() {
+        eprintln!("\n[ERROR-8] 필수 툴 설치 실패. Homebrew 상태를 확인하세요.");
+        return false;
     }
+    // Zabbix 소스 가져오기
+    let clone_status = Command::new("git")
+        .args(["clone", "https://git.zabbix.com/scm/zbx/zabbix.git"])
+        .status()
+        .expect("git clone 실행 실패");
+
+    if !clone_status.success() {
+        eprintln!("\n[ERROR-9] Zabbix 소스 가져오기 실패. git 상태를 확인하세요.");
+        return false;
+    }
+    // 빌드 준비
+    let bootstrap_status = Command::new("bash")
+        .args(["bootstrap.sh"])
+        .status()
+        .expect("bootstrap.sh 실행 실패");
+
+    if !bootstrap_status.success() {
+        eprintln!("\n[ERROR-10] 빌드 준비 실패. bootstrap.sh 상태를 확인하세요.");
+        return false;
+    }
+    // 빌드 & 설치
+    let build_status = Command::new("make")
+        .status()
+        .expect("make 실행 실패");
+
+    if !build_status.success() {
+        eprintln!("\n[ERROR-11] 빌드 & 설치 실패. make 상태를 확인하세요.");
+        return false;
+    }
+    // 빌드 & 설치
+    let install_status = Command::new("sudo")
+        .args(["make", "install"])
+        .status()
+        .expect("make install 실행 실패");
+
+    if !install_status.success() {
+        eprintln!("\n[ERROR-12] 빌드 & 설치 실패. make install 상태를 확인하세요.");
+        return false;
+    }
+
+    println!("\n[INFO 8/12] Zabbix Agent 설치 완료.");
+    true
 }
+
 
 fn detect_os() -> String {
     if cfg!(target_os = "windows") {
